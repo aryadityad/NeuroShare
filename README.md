@@ -166,7 +166,6 @@ This project is open-source and available under the [MIT License](LICENSE).
 ## Contact
 
 **Aryaditya Deshmukh**  
-Reg No: 23BCE5056  
 Feel free to open issues or contact me for suggestions and improvements.
 ```
 
