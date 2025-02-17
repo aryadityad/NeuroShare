@@ -167,4 +167,3 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 **Aryaditya Deshmukh**  
 Feel free to open issues or contact me for suggestions and improvements.
-```
