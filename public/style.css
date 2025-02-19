@@ -1,82 +1,223 @@
-body {
-  background-color: #0d1b2a;
-  color: #e0e1dd;
-  font-family: Arial, sans-serif;
+/* Reset defaults */
+* {
   margin: 0;
   padding: 0;
-}
-
-.container {
-  width: 80%;
-  margin: 30px auto;
-  padding: 20px;
-  background-color: #1b263b;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-h1, h2 {
-  text-align: center;
-  color: #778da9;
-}
-
-.console {
-  background-color: #415a77;
-  padding: 10px;
-  margin-bottom: 20px;
-  height: 120px;
-  overflow-y: auto;
-  border-radius: 5px;
-}
-
-.transfer-section {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-
-.send-section, .receive-section {
-  background-color: #1b263b;
-  padding: 20px;
-  border-radius: 5px;
-  width: 45%;
-  min-width: 300px;
   box-sizing: border-box;
-  margin-bottom: 20px;
 }
 
-input[type="file"] {
-  margin: 10px 0;
-  width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+/* Global Styles */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #4a90e2, #007aff);
+  color: #333;
+  min-height: 100vh;
 }
 
-button {
-  background-color: #778da9;
-  border: none;
-  color: #e0e1dd;
-  padding: 10px;
-  border-radius: 5px;
+/* Overlay Container for Transparency & Centering */
+.overlay {
+  position: relative;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.theme-toggle button {
+  background: transparent;
+  border: 1px solid #007aff;
+  border-radius: 4px;
+  color: #007aff;
+  padding: 0.5rem;
   cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.theme-toggle button:hover {
+  background: #007aff;
+  color: #fff;
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 1rem 0;
+  border-bottom: 2px solid rgba(0, 122, 255, 0.5);
+}
+header h1 {
+  font-size: 3rem;
+  color: #007aff;
+  margin-bottom: 0.5rem;
+}
+header p {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Main Layout */
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+/* Sections */
+section {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+section h2 {
+  margin-bottom: 1rem;
+  color: #007aff;
+  font-weight: 600;
+}
+
+/* File Input */
+.file-input-container {
+  margin-bottom: 1rem;
+}
+input[type="file"] {
   width: 100%;
-  margin-bottom: 10px;
+  padding: 0.75rem;
+  border: 2px solid #007aff;
+  border-radius: 5px;
+  background: rgba(0, 122, 255, 0.1);
+  color: #333;
 }
 
-button:hover {
-  background-color: #415a77;
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: #007aff;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+}
+.btn:hover {
+  background: #005bb5;
 }
 
+/* File List */
 #fileList {
   list-style: none;
-  padding: 0;
+  margin-top: 1rem;
+}
+#fileList li {
+  background: rgba(0, 122, 255, 0.1);
+  padding: 0.75rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+#fileList li:hover {
+  background: rgba(0, 122, 255, 0.3);
 }
 
-#fileList li {
-  background-color: #415a77;
-  margin: 5px 0;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
+/* Console Log */
+.console {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 122, 255, 0.3);
+  padding: 1rem;
+  border-radius: 5px;
+  height: 150px;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  border-top: 2px solid rgba(0, 122, 255, 0.5);
+  color: #333;
+}
+
+/* Dark Theme Overrides */
+body.dark-theme {
+  background: #000; /* AMOLED black */
+  color: #eee;
+}
+
+body.dark-theme .overlay {
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme header {
+  border-bottom: 2px solid rgba(0, 122, 255, 0.5);
+}
+body.dark-theme header h1 {
+  color: #fff;
+}
+body.dark-theme header p {
+  color: #ccc;
+}
+
+body.dark-theme section {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  box-shadow: none;
+}
+body.dark-theme section h2 {
+  color: #fff;
+}
+
+body.dark-theme input[type="file"] {
+  border: 2px solid #007aff;
+  background: rgba(0, 122, 255, 0.2);
+  color: #fff;
+}
+
+body.dark-theme .btn {
+  background: #007aff;
+  color: #fff;
+}
+body.dark-theme .btn:hover {
+  background: #005bb5;
+}
+
+body.dark-theme #fileList li {
+  background: rgba(0, 122, 255, 0.2);
+  color: #fff;
+}
+body.dark-theme #fileList li:hover {
+  background: rgba(0, 122, 255, 0.4);
+}
+
+body.dark-theme .console {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 122, 255, 0.3);
+  color: #fff;
+}
+
+body.dark-theme footer {
+  background: #000;
+  border-top: 2px solid rgba(0, 122, 255, 0.5);
+  color: #ccc;
+}
+
+/* Theme Toggle Button (Dark Theme adjustments) */
+body.dark-theme .theme-toggle button {
+  border-color: #fff;
+  color: #fff;
+}
+body.dark-theme .theme-toggle button:hover {
+  background: #fff;
+  color: #000;
 }

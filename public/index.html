@@ -4,25 +4,43 @@
   <meta charset="UTF-8">
   <title>NeuroShare</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1>NeuroShare</h1>
-    <div id="console" class="console"></div>
-    <div class="transfer-section">
-      <div class="send-section">
+  <div class="overlay">
+    <header>
+      <div class="theme-toggle">
+        <button id="themeToggle">Toggle Theme</button>
+      </div>
+      <h1>NeuroShare</h1>
+      <p>Secure &amp; Fast File Sharing</p>
+    </header>
+    <main>
+      <section class="upload-section">
         <h2>Send File</h2>
         <form id="uploadForm" enctype="multipart/form-data">
-          <input type="file" name="file" id="fileInput">
-          <button type="submit">Upload &amp; Share</button>
+          <div class="file-input-container">
+            <input type="file" name="file" id="fileInput">
+          </div>
+          <button type="submit" class="btn">Upload &amp; Share</button>
         </form>
-      </div>
-      <div class="receive-section">
+      </section>
+      <section class="download-section">
         <h2>Receive File</h2>
-        <button id="refreshBtn">Refresh File List</button>
+        <button id="refreshBtn" class="btn">Refresh File List</button>
         <ul id="fileList"></ul>
-      </div>
-    </div>
+      </section>
+      <section class="log-section">
+        <h2>Console Log</h2>
+        <div id="console" class="console"></div>
+      </section>
+    </main>
+    <footer>
+      <p>NeuroShare &copy; 2025</p>
+    </footer>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
