@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Ensure required directories exist
+// Ensure required directories exist (shared and temp)
 const directories = ['shared', 'temp'];
 directories.forEach(dir => {
   const fullPath = path.join(__dirname, dir);
@@ -20,7 +20,7 @@ directories.forEach(dir => {
   }
 });
 
-// Configure multer to store files in the 'shared' folder.
+// Configure multer to store uploaded files in the 'shared' folder.
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'shared');
@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Serve static files from 'public'
+// Serve static files from the "public" folder.
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
@@ -67,7 +67,7 @@ app.get('/download', async (req, res) => {
   if (!fs.existsSync(localPath)) return res.status(404).send('File not found.');
 
   const client = new ftpClient.Client();
-  client.ftp.verbose = false;
+  client.ftp.verbose = true; // Increase logging for debugging
   try {
     await client.access({
       host: '127.0.0.1',
@@ -76,6 +76,7 @@ app.get('/download', async (req, res) => {
       password: 'anonymous',
       secure: true,
       secureOptions: { rejectUnauthorized: false }
+      // For debugging, you can temporarily set secure: false
     });
     const tempDir = path.join(__dirname, 'temp');
     const tempFilePath = path.join(tempDir, fileName);
@@ -88,6 +89,7 @@ app.get('/download', async (req, res) => {
     });
   } catch (err) {
     io.emit('log', `FTP download error: ${err.message}`);
+    console.error('Detailed FTP error:', err);
     res.status(500).send('Error downloading file via FTP.');
   }
 });
@@ -102,7 +104,7 @@ server.listen(HTTP_PORT, () => {
 const ftpPort = 2121;
 const ftpServer = new FtpSrv({
   url: `ftps://0.0.0.0:${ftpPort}`,
-  pasv_url: "127.0.0.1", // This allows passive connections by specifying the external IP/hostname.
+  pasv_url: "127.0.0.1", // Adjust this if testing across different machines
   tls: {
     key: fs.readFileSync(path.join(__dirname, 'ftp', 'key.pem')),
     cert: fs.readFileSync(path.join(__dirname, 'ftp', 'cert.pem'))
@@ -123,7 +125,7 @@ ftpServer.listen()
     console.error('Error starting FTPS server:', err);
   });
 
-// Socket.IO for logging
+// Socket.IO for logging real-time events.
 io.on('connection', (socket) => {
   console.log('A client connected for real-time logging.');
 });
