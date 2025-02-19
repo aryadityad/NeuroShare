@@ -1,7 +1,7 @@
 {
   "name": "neuroshare-production",
-  "version": "1.0.0",
-  "description": "Production version of NeuroShare using fast FTPS with TLS encryption",
+  "version": "2.1.0",
+  "description": "NeuroShare: A modern, secure, and fast file-sharing web app with FTPS integration, PWA support, and advanced UI features.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -11,6 +11,8 @@
     "ftp-srv": "^4.3.0",
     "multer": "1.4.5-lts.1",
     "basic-ftp": "^5.0.2",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^6.0.1"
   }
 }

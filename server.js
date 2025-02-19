@@ -1,4 +1,6 @@
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
@@ -8,12 +10,22 @@ const FtpSrv = require('ftp-srv');
 const ftpClient = require('basic-ftp');
 
 const app = express();
+
+// Enhance security with Helmet
+app.use(helmet());
+
+// Apply rate limiting (100 requests per 15 minutes per IP)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+app.use(limiter);
+
 const server = http.createServer(app);
 const io = new Server(server);
 
 // Ensure required directories exist (shared and temp)
-const directories = ['shared', 'temp'];
-directories.forEach(dir => {
+['shared', 'temp'].forEach(dir => {
   const fullPath = path.join(__dirname, dir);
   if (!fs.existsSync(fullPath)) {
     fs.mkdirSync(fullPath, { recursive: true });
@@ -31,7 +43,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Serve static files from the "public" folder.
+// Serve static files from the public folder.
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
@@ -52,9 +64,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.get('/files', (req, res) => {
   const sharedDir = path.join(__dirname, 'shared');
   fs.readdir(sharedDir, (err, files) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error reading files.' });
-    }
+    if (err) return res.status(500).json({ error: 'Error reading files.' });
     res.json({ files });
   });
 });
@@ -67,7 +77,7 @@ app.get('/download', async (req, res) => {
   if (!fs.existsSync(localPath)) return res.status(404).send('File not found.');
 
   const client = new ftpClient.Client();
-  client.ftp.verbose = true; // Increase logging for debugging
+  client.ftp.verbose = true;
   try {
     await client.access({
       host: '127.0.0.1',
@@ -76,7 +86,6 @@ app.get('/download', async (req, res) => {
       password: 'anonymous',
       secure: true,
       secureOptions: { rejectUnauthorized: false }
-      // For debugging, you can temporarily set secure: false
     });
     const tempDir = path.join(__dirname, 'temp');
     const tempFilePath = path.join(tempDir, fileName);
@@ -100,11 +109,11 @@ server.listen(HTTP_PORT, () => {
   console.log(`HTTP server listening on port ${HTTP_PORT}`);
 });
 
-// Start FTPS server with passive mode configured
+// Start FTPS server with passive mode configuration
 const ftpPort = 2121;
 const ftpServer = new FtpSrv({
   url: `ftps://0.0.0.0:${ftpPort}`,
-  pasv_url: "127.0.0.1", // Adjust this if testing across different machines
+  pasv_url: "127.0.0.1", // Adjust if needed for external connections
   tls: {
     key: fs.readFileSync(path.join(__dirname, 'ftp', 'key.pem')),
     cert: fs.readFileSync(path.join(__dirname, 'ftp', 'cert.pem'))
@@ -125,7 +134,7 @@ ftpServer.listen()
     console.error('Error starting FTPS server:', err);
   });
 
-// Socket.IO for logging real-time events.
+// Socket.IO for real-time logging
 io.on('connection', (socket) => {
   console.log('A client connected for real-time logging.');
 });

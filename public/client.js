@@ -4,6 +4,8 @@ const uploadForm = document.getElementById('uploadForm');
 const fileInput = document.getElementById('fileInput');
 const refreshBtn = document.getElementById('refreshBtn');
 const fileList = document.getElementById('fileList');
+const progressContainer = document.getElementById('uploadProgressContainer');
+const progressBar = document.getElementById('uploadProgress');
 
 // Append log messages to the console area.
 function log(message) {
@@ -18,37 +20,48 @@ socket.on('log', (message) => {
   log(message);
 });
 
-// Handle file upload.
-uploadForm.addEventListener('submit', async (e) => {
+// Handle file upload using XMLHttpRequest for progress tracking.
+uploadForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const file = fileInput.files[0];
   if (!file) {
     log("Please select a file to upload.");
     return;
   }
+  
   const formData = new FormData();
   formData.append('file', file);
   
-  try {
-    const res = await fetch('/upload', {
-      method: 'POST',
-      body: formData
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text);
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/upload');
+  
+  xhr.upload.addEventListener('progress', (event) => {
+    if (event.lengthComputable) {
+      const percentComplete = Math.round((event.loaded / event.total) * 100);
+      progressBar.style.width = percentComplete + '%';
     }
-    const data = await res.json();
-    if (data.success) {
-      log(`Uploaded: ${file.name}`);
+  });
+  
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      progressBar.style.width = '0%';
       fileInput.value = '';
-      loadFiles();
-    } else {
-      log("Upload failed: " + data.message);
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.success) {
+          log(`Uploaded: ${file.name}`);
+          loadFiles();
+        } else {
+          log("Upload failed: " + response.message);
+        }
+      } else {
+        log("Error uploading file: " + xhr.responseText);
+      }
     }
-  } catch (err) {
-    log("Error uploading file: " + err.message);
-  }
+  };
+  
+  progressContainer.classList.remove('hidden');
+  xhr.send(formData);
 });
 
 // Fetch and display the list of available files.
@@ -61,8 +74,7 @@ async function loadFiles() {
     }
     const data = await res.json();
     fileList.innerHTML = '';
-    // Check that data.files exists and is an array
-    if (data && Array.isArray(data.files)) {
+    if (data && Array.isArray(data.files) && data.files.length > 0) {
       data.files.forEach(file => {
         const li = document.createElement('li');
         li.textContent = file;

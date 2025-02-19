@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Responsive viewport meta tag -->
+  <!-- Responsive viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeuroShare</title>
+  <link rel="manifest" href="manifest.json">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,37 +14,51 @@
 </head>
 <body>
   <div class="overlay">
-    <header>
+    <header class="animated fadeInDown">
       <h1>NeuroShare</h1>
-      <p>Secure &amp; Fast File Sharing</p>
+      <p>Secure & Fast File Sharing</p>
     </header>
     <main>
-      <section class="upload-section">
+      <section class="upload-section animated fadeInUp">
         <h2>Send File</h2>
         <form id="uploadForm" enctype="multipart/form-data">
-          <!-- Accessible label added -->
           <label for="fileInput">Select a file to upload:</label>
           <div class="file-input-container">
             <input type="file" name="file" id="fileInput" title="Choose a file to upload">
           </div>
-          <button type="submit" class="btn">Upload &amp; Share</button>
+          <button type="submit" class="btn">Upload & Share</button>
+          <div id="uploadProgressContainer" class="progress-container hidden">
+            <div id="uploadProgress" class="progress-bar"></div>
+          </div>
         </form>
       </section>
-      <section class="download-section">
+      <section class="download-section animated fadeInUp">
         <h2>Receive File</h2>
         <button id="refreshBtn" class="btn">Refresh File List</button>
         <ul id="fileList"></ul>
       </section>
-      <section class="log-section">
+      <section class="log-section animated fadeInUp">
         <h2>Console Log</h2>
         <div id="console" class="console"></div>
       </section>
     </main>
-    <footer>
+    <footer class="animated fadeInUp">
       <p>NeuroShare &copy; 2025</p>
     </footer>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
+  <script>
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js').then(function(registration) {
+          console.log('Service Worker registered with scope:', registration.scope);
+        }, function(err) {
+          console.error('Service Worker registration failed:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
