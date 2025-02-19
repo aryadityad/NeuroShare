@@ -4,7 +4,6 @@ const uploadForm = document.getElementById('uploadForm');
 const fileInput = document.getElementById('fileInput');
 const refreshBtn = document.getElementById('refreshBtn');
 const fileList = document.getElementById('fileList');
-const themeToggleBtn = document.getElementById('themeToggle');
 
 // Append log messages to the console area.
 function log(message) {
@@ -35,13 +34,17 @@ uploadForm.addEventListener('submit', async (e) => {
       method: 'POST',
       body: formData
     });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text);
+    }
     const data = await res.json();
     if (data.success) {
       log(`Uploaded: ${file.name}`);
       fileInput.value = '';
       loadFiles();
     } else {
-      log("Upload failed.");
+      log("Upload failed: " + data.message);
     }
   } catch (err) {
     log("Error uploading file: " + err.message);
@@ -52,16 +55,25 @@ uploadForm.addEventListener('submit', async (e) => {
 async function loadFiles() {
   try {
     const res = await fetch('/files');
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text);
+    }
     const data = await res.json();
     fileList.innerHTML = '';
-    data.files.forEach(file => {
-      const li = document.createElement('li');
-      li.textContent = file;
-      li.addEventListener('click', () => {
-        window.location.href = `/download?file=${encodeURIComponent(file)}`;
+    // Check that data.files exists and is an array
+    if (data && Array.isArray(data.files)) {
+      data.files.forEach(file => {
+        const li = document.createElement('li');
+        li.textContent = file;
+        li.addEventListener('click', () => {
+          window.location.href = `/download?file=${encodeURIComponent(file)}`;
+        });
+        fileList.appendChild(li);
       });
-      fileList.appendChild(li);
-    });
+    } else {
+      log("No files available.");
+    }
   } catch (err) {
     log("Error fetching file list: " + err.message);
   }
@@ -72,21 +84,3 @@ refreshBtn.addEventListener('click', loadFiles);
 
 // Initial load of file list.
 loadFiles();
-
-// Theme toggle functionality with page refresh
-themeToggleBtn.addEventListener('click', () => {
-  if (document.body.classList.contains('dark-theme')) {
-    document.body.classList.remove('dark-theme');
-    localStorage.setItem('theme', 'light');
-  } else {
-    document.body.classList.add('dark-theme');
-    localStorage.setItem('theme', 'dark');
-  }
-  // Refresh the page so that the new theme is applied across all elements
-  location.reload();
-});
-
-// On page load, check localStorage for theme preference
-if (localStorage.getItem('theme') === 'dark') {
-  document.body.classList.add('dark-theme');
-}

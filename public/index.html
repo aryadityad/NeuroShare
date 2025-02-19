@@ -2,19 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Responsive viewport meta tag -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeuroShare</title>
-  <link rel="stylesheet" href="style.css">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="overlay">
     <header>
-      <div class="theme-toggle">
-        <button id="themeToggle">Toggle Theme</button>
-      </div>
       <h1>NeuroShare</h1>
       <p>Secure &amp; Fast File Sharing</p>
     </header>
@@ -22,8 +21,10 @@
       <section class="upload-section">
         <h2>Send File</h2>
         <form id="uploadForm" enctype="multipart/form-data">
+          <!-- Accessible label added -->
+          <label for="fileInput">Select a file to upload:</label>
           <div class="file-input-container">
-            <input type="file" name="file" id="fileInput">
+            <input type="file" name="file" id="fileInput" title="Choose a file to upload">
           </div>
           <button type="submit" class="btn">Upload &amp; Share</button>
         </form>

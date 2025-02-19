@@ -13,35 +13,14 @@ body {
   min-height: 100vh;
 }
 
-/* Overlay Container for Transparency & Centering */
+/* Overlay Container for transparency & centering */
 .overlay {
-  position: relative;
   max-width: 1000px;
   margin: 2rem auto;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.85);
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Theme Toggle Button */
-.theme-toggle {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-.theme-toggle button {
-  background: transparent;
-  border: 1px solid #007aff;
-  border-radius: 4px;
-  color: #007aff;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
-.theme-toggle button:hover {
-  background: #007aff;
-  color: #fff;
 }
 
 /* Header */
@@ -146,78 +125,4 @@ footer {
   padding: 1rem 0;
   border-top: 2px solid rgba(0, 122, 255, 0.5);
   color: #333;
-}
-
-/* Dark Theme Overrides */
-body.dark-theme {
-  background: #000; /* AMOLED black */
-  color: #eee;
-}
-
-body.dark-theme .overlay {
-  background: rgba(0, 0, 0, 0.9);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-}
-
-body.dark-theme header {
-  border-bottom: 2px solid rgba(0, 122, 255, 0.5);
-}
-body.dark-theme header h1 {
-  color: #fff;
-}
-body.dark-theme header p {
-  color: #ccc;
-}
-
-body.dark-theme section {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  box-shadow: none;
-}
-body.dark-theme section h2 {
-  color: #fff;
-}
-
-body.dark-theme input[type="file"] {
-  border: 2px solid #007aff;
-  background: rgba(0, 122, 255, 0.2);
-  color: #fff;
-}
-
-body.dark-theme .btn {
-  background: #007aff;
-  color: #fff;
-}
-body.dark-theme .btn:hover {
-  background: #005bb5;
-}
-
-body.dark-theme #fileList li {
-  background: rgba(0, 122, 255, 0.2);
-  color: #fff;
-}
-body.dark-theme #fileList li:hover {
-  background: rgba(0, 122, 255, 0.4);
-}
-
-body.dark-theme .console {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 122, 255, 0.3);
-  color: #fff;
-}
-
-body.dark-theme footer {
-  background: #000;
-  border-top: 2px solid rgba(0, 122, 255, 0.5);
-  color: #ccc;
-}
-
-/* Theme Toggle Button (Dark Theme adjustments) */
-body.dark-theme .theme-toggle button {
-  border-color: #fff;
-  color: #fff;
-}
-body.dark-theme .theme-toggle button:hover {
-  background: #fff;
-  color: #000;
 }

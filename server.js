@@ -11,39 +11,44 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Set up multer to store uploaded files into the 'shared' folder.
+// Ensure required directories exist
+const directories = ['shared', 'temp'];
+directories.forEach(dir => {
+  const fullPath = path.join(__dirname, dir);
+  if (!fs.existsSync(fullPath)) {
+    fs.mkdirSync(fullPath, { recursive: true });
+  }
+});
+
+// Configure multer to store files in the 'shared' folder.
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'shared');
   },
   filename: (req, file, cb) => {
-    // In production you may want to sanitize filenames.
     cb(null, file.originalname);
   }
 });
 const upload = multer({ storage });
 
-// Serve static files from the "public" directory.
+// Serve static files from 'public'
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- Endpoints ---
-
-// Main page.
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// File upload endpoint (Send File).
+// Upload endpoint
 app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No file uploaded.' });
+  }
   const fileName = req.file.originalname;
   io.emit('log', `File uploaded: ${fileName}`);
-  
-  // (Optional: Add file-splitting logic here if file size exceeds a threshold.)
-  
-  res.json({ success: true, message: 'File uploaded and shared successfully.' });
+  res.json({ success: true, message: 'File uploaded successfully.' });
 });
 
-// List available shared files.
+// List files endpoint
 app.get('/files', (req, res) => {
   const sharedDir = path.join(__dirname, 'shared');
   fs.readdir(sharedDir, (err, files) => {
@@ -54,19 +59,13 @@ app.get('/files', (req, res) => {
   });
 });
 
-// Download file endpoint (Receive File).
-// This endpoint uses basic-ftp as a proxy client to connect to the local FTPS server.
+// Download endpoint using basic-ftp
 app.get('/download', async (req, res) => {
   const fileName = req.query.file;
-  if (!fileName) {
-    return res.status(400).send('Missing "file" parameter.');
-  }
+  if (!fileName) return res.status(400).send('Missing "file" parameter.');
   const localPath = path.join(__dirname, 'shared', fileName);
-  if (!fs.existsSync(localPath)) {
-    return res.status(404).send('File not found.');
-  }
-  
-  // Connect to the local FTPS server.
+  if (!fs.existsSync(localPath)) return res.status(404).send('File not found.');
+
   const client = new ftpClient.Client();
   client.ftp.verbose = false;
   try {
@@ -76,24 +75,15 @@ app.get('/download', async (req, res) => {
       user: 'anonymous',
       password: 'anonymous',
       secure: true,
-      secureOptions: { rejectUnauthorized: false } // For self-signed certificates
+      secureOptions: { rejectUnauthorized: false }
     });
-    
-    // Download the file via FTP to a temporary location.
     const tempDir = path.join(__dirname, 'temp');
-    fs.mkdirSync(tempDir, { recursive: true });
     const tempFilePath = path.join(tempDir, fileName);
     await client.downloadTo(tempFilePath, fileName);
-    
     io.emit('log', `File downloaded via FTP: ${fileName}`);
     client.close();
-    
-    // Send the file to the receiver.
     res.download(tempFilePath, fileName, (err) => {
-      if (err) {
-        io.emit('log', `Error sending file ${fileName}: ${err.message}`);
-      }
-      // Optionally, delete the temporary file after sending.
+      if (err) io.emit('log', `Error sending file ${fileName}: ${err.message}`);
       fs.unlink(tempFilePath, () => {});
     });
   } catch (err) {
@@ -102,27 +92,25 @@ app.get('/download', async (req, res) => {
   }
 });
 
-// Start the HTTP server.
+// Start HTTP server
 const HTTP_PORT = process.env.PORT || 3000;
 server.listen(HTTP_PORT, () => {
   console.log(`HTTP server listening on port ${HTTP_PORT}`);
 });
 
-// --- Start FTPS Server using ftp-srv ---
-
+// Start FTPS server with passive mode configured
 const ftpPort = 2121;
 const ftpServer = new FtpSrv({
   url: `ftps://0.0.0.0:${ftpPort}`,
+  pasv_url: "127.0.0.1", // This allows passive connections by specifying the external IP/hostname.
   tls: {
     key: fs.readFileSync(path.join(__dirname, 'ftp', 'key.pem')),
     cert: fs.readFileSync(path.join(__dirname, 'ftp', 'cert.pem'))
   },
-  // Allow anonymous logins for simplicity.
   anonymous: true
 });
 
-// When a client logs in, serve the "shared" directory.
-ftpServer.on('login', ({ connection, username, password }, resolve) => {
+ftpServer.on('login', ({ username, password }, resolve) => {
   resolve({ root: path.join(__dirname, 'shared') });
 });
 
@@ -135,7 +123,7 @@ ftpServer.listen()
     console.error('Error starting FTPS server:', err);
   });
 
-// --- Socket.IO for real-time logging ---
+// Socket.IO for logging
 io.on('connection', (socket) => {
   console.log('A client connected for real-time logging.');
 });
