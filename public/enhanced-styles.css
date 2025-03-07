@@ -26,6 +26,7 @@
   .btn {
     width: 100%;
     text-align: center;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -69,21 +70,27 @@
   width: 100%;
   height: 100%;
   cursor: pointer;
+  z-index: 2;
 }
 
 .custom-file-label {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: rgba(0, 122, 255, 0.1);
   border: 2px dashed #007aff;
-  border-radius: 5px;
-  padding: 1.5rem 1rem;
+  border-radius: 8px;
+  padding: 2rem 1rem;
   text-align: center;
   color: #007aff;
   transition: all 0.3s ease;
+  min-height: 120px;
 }
 
 .custom-file-label:hover {
   background: rgba(0, 122, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 .custom-file-label span {
@@ -92,10 +99,23 @@
   margin-bottom: 0.5rem;
 }
 
+.custom-file-label i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.file-selected .custom-file-label {
+  background: rgba(0, 196, 112, 0.1);
+  border-color: #00c470;
+  color: #00c470;
+}
+
 /* Hover Effects for Buttons and List Items */
 .btn {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .btn:hover {
@@ -105,23 +125,37 @@
 
 .btn:active {
   transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 #fileList li {
   display: flex;
   align-items: center;
   transition: all 0.3s ease;
+  padding: 1rem;
 }
 
 #fileList li:before {
   content: "📄";
-  margin-right: 8px;
+  margin-right: 12px;
   font-size: 1.2rem;
 }
 
 #fileList li:hover {
   transform: translateX(5px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#fileList li .file-size {
+  margin-left: auto;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+#fileList li .file-date {
+  margin-left: 1rem;
+  color: #777;
+  font-size: 0.85rem;
 }
 
 /* Improved Console */
@@ -133,12 +167,26 @@
   line-height: 1.5;
   height: 200px;
   transition: height 0.3s ease;
+  padding: 0.75rem;
+  border-radius: 8px;
 }
 
 .console p {
   margin: 0;
   padding: 3px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.console p.info {
+  color: #0066cc;
+}
+
+.console p.success {
+  color: #00aa55;
+}
+
+.console p.error {
+  color: #cc3300;
 }
 
 .console p:last-child {
@@ -152,6 +200,7 @@
   overflow: hidden;
   margin: 15px 0;
   background: #e2e8f0;
+  position: relative;
 }
 
 .progress-bar {
@@ -161,13 +210,28 @@
   transition: width 0.4s ease;
 }
 
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
 /* CSS Variables for Consistent Theming */
 :root {
   --primary-color: #007aff;
   --primary-light: rgba(0, 122, 255, 0.1);
   --primary-hover: #005bb5;
+  --success-color: #00c470;
+  --success-light: rgba(0, 196, 112, 0.1);
+  --danger-color: #ff3b30;
+  --danger-light: rgba(255, 59, 48, 0.1);
   --text-dark: #333;
   --text-light: #555;
+  --text-muted: #777;
   --bg-light: #ffffff;
   --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -194,6 +258,7 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius);
 }
 
 section {
@@ -203,10 +268,36 @@ section {
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
+  border-radius: var(--border-radius);
 }
 
 section:hover {
   box-shadow: var(--shadow-md);
+}
+
+/* Status Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.badge-success {
+  background-color: var(--success-light);
+  color: var(--success-color);
+}
+
+.badge-primary {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.badge-danger {
+  background-color: var(--danger-light);
+  color: var(--danger-color);
 }
 
 /* Dark Mode Support */
@@ -215,8 +306,13 @@ section:hover {
     --primary-color: #3b99ff;
     --primary-light: rgba(59, 153, 255, 0.2);
     --primary-hover: #69b1ff;
+    --success-color: #39e58c;
+    --success-light: rgba(57, 229, 140, 0.2);
+    --danger-color: #ff6961;
+    --danger-light: rgba(255, 105, 97, 0.2);
     --text-dark: #e0e0e0;
     --text-light: #b0b0b0;
+    --text-muted: #909090;
     --bg-light: #1a1a1a;
   }
   
@@ -248,6 +344,18 @@ section:hover {
     color: #e0e0e0;
     border: 1px solid #333;
   }
+
+  .console p.info {
+    color: #5599ff;
+  }
+  
+  .console p.success {
+    color: #39e58c;
+  }
+  
+  .console p.error {
+    color: #ff6961;
+  }
   
   #fileList li {
     background: rgba(59, 153, 255, 0.2);
@@ -256,6 +364,20 @@ section:hover {
   #fileList li:hover {
     background: rgba(59, 153, 255, 0.3);
   }
+
+  .custom-file-label {
+    background: rgba(59, 153, 255, 0.2);
+    border-color: var(--primary-color);
+  }
+
+  .file-selected .custom-file-label {
+    background: rgba(57, 229, 140, 0.2);
+    border-color: var(--success-color);
+  }
+
+  .progress-container {
+    background: #333;
+  }
 }
 
 /* Subtle Animations */
@@ -263,6 +385,10 @@ section:hover {
   0% { transform: scale(1); }
   50% { transform: scale(1.02); }
   100% { transform: scale(1); }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
 }
 
 header h1 {
@@ -304,6 +430,13 @@ section {
   background-size: 200px 100%;
   animation: skeletonPulse 1.5s infinite;
   border-radius: var(--border-radius);
+  height: 20px;
+  margin-bottom: 8px;
+}
+
+/* File loading placeholder */
+.file-placeholder {
+  height: 50px;
 }
 
 /* Optimized animations with will-change */
@@ -323,6 +456,28 @@ section {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 122, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn .spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
 /* Responsive font sizing with clamp */
 header h1 {
   font-size: clamp(1.8rem, 5vw, 3rem);
@@ -336,6 +491,65 @@ header p {
 .overlay, section, .btn {
   /* More performant than regular box-shadow */
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Toast notifications */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.toast {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: var(--border-radius);
+  margin-top: 10px;
+  min-width: 250px;
+  max-width: 350px;
+  display: flex;
+  align-items: center;
+  transform: translateX(120%);
+  transition: transform 0.3s ease;
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast-success {
+  border-left: 4px solid var(--success-color);
+}
+
+.toast-info {
+  border-left: 4px solid var(--primary-color);
+}
+
+.toast-error {
+  border-left: 4px solid var(--danger-color);
+}
+
+.toast-icon {
+  margin-right: 10px;
+  font-size: 1.5rem;
+}
+
+.toast-message {
+  flex: 1;
+}
+
+.toast-close {
+  cursor: pointer;
+  opacity: 0.7;
+  font-size: 1.2rem;
+  transition: opacity 0.2s;
+}
+
+.toast-close:hover {
+  opacity: 1;
 }
 
 /* Print styles */
@@ -396,6 +610,15 @@ header p {
   font-weight: 600;
 }
 
+/* Utility classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+
 /* Reduced motion option */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -437,4 +660,41 @@ p, label, button, input {
 
 [aria-busy="true"] {
   cursor: progress;
+}
+
+/* File upload drag and drop zone */
+.drop-zone {
+  border: 3px dashed var(--primary-color);
+  background-color: var(--primary-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+}
+
+.drop-zone.active {
+  background-color: rgba(0, 196, 112, 0.1);
+  border-color: var(--success-color);
+  transform: scale(1.02);
+}
+
+.drop-zone-prompt {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.drop-zone-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.drop-zone.active .drop-zone-prompt,
+.drop-zone.active .drop-zone-icon {
+  color: var(--success-color);
 }
