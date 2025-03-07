@@ -4,49 +4,154 @@
   <meta charset="UTF-8">
   <!-- Responsive viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuroShare</title>
+  <title>NeuroShare - Secure & Fast File Sharing</title>
+  <meta name="description" content="NeuroShare is a secure, fast file sharing application for easy transfer of files between devices.">
   <link rel="manifest" href="manifest.json">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="enhanced-styles.css">
 </head>
 <body>
+  <!-- Skip to content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
   <div class="overlay">
     <header class="animated fadeInDown">
-      <h1>NeuroShare</h1>
+      <h1><i class="fas fa-share-nodes"></i> NeuroShare</h1>
       <p>Secure & Fast File Sharing</p>
     </header>
-    <main>
+    
+    <main id="main-content">
       <section class="upload-section animated fadeInUp">
-        <h2>Send File</h2>
-        <form id="uploadForm" enctype="multipart/form-data">
-          <label for="fileInput">Select a file to upload:</label>
-          <div class="file-input-container">
-            <input type="file" name="file" id="fileInput" title="Choose a file to upload">
+        <h2><i class="fas fa-cloud-upload-alt"></i> Send File</h2>
+        
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
           </div>
-          <button type="submit" class="btn">Upload & Share</button>
+          <div class="drop-zone-prompt">Drag & Drop files here</div>
+          <div>or</div>
+        </div>
+        
+        <form id="uploadForm" enctype="multipart/form-data">
+          <div class="custom-file-input">
+            <input type="file" name="file" id="fileInput" title="Choose a file to upload" aria-label="Choose a file to upload">
+            <label for="fileInput" class="custom-file-label">
+              <i class="fas fa-file-upload"></i>
+              <span>Select a file</span>
+              <small>Max file size: 100MB</small>
+            </label>
+          </div>
+          
+          <div id="selectedFileInfo" class="hidden">
+            <div class="selected-file">
+              <i class="fas fa-file-alt"></i>
+              <span id="selectedFileName">No file selected</span>
+              <span id="selectedFileSize" class="file-size"></span>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn" id="uploadBtn">
+            <i class="fas fa-share-alt"></i> Upload & Share
+          </button>
+          
           <div id="uploadProgressContainer" class="progress-container hidden">
             <div id="uploadProgress" class="progress-bar"></div>
+            <div class="progress-text" id="uploadProgressText">0%</div>
           </div>
         </form>
       </section>
+      
       <section class="download-section animated fadeInUp">
-        <h2>Receive File</h2>
-        <button id="refreshBtn" class="btn">Refresh File List</button>
-        <ul id="fileList"></ul>
+        <h2><i class="fas fa-cloud-download-alt"></i> Receive Files</h2>
+        
+        <button id="refreshBtn" class="btn">
+          <i class="fas fa-sync-alt"></i> Refresh File List
+        </button>
+        
+        <div id="fileListContainer">
+          <div id="loadingFiles" class="hidden">
+            <div class="loading file-placeholder"></div>
+            <div class="loading file-placeholder"></div>
+            <div class="loading file-placeholder"></div>
+          </div>
+          
+          <ul id="fileList"></ul>
+          
+          <div id="emptyFileList" class="text-center hidden">
+            <p>No files available</p>
+            <i class="fas fa-inbox fa-3x text-muted mt-2 mb-2"></i>
+            <p class="text-muted">Upload a file to get started!</p>
+          </div>
+        </div>
       </section>
+      
       <section class="log-section animated fadeInUp">
-        <h2>Console Log</h2>
+        <h2><i class="fas fa-terminal"></i> Console Log</h2>
         <div id="console" class="console"></div>
+        <button id="clearConsoleBtn" class="btn mt-1">
+          <i class="fas fa-trash"></i> Clear Console
+        </button>
       </section>
     </main>
+    
     <footer class="animated fadeInUp">
-      <p>NeuroShare &copy; 2025</p>
+      <p>NeuroShare &copy; 2025 | <a href="#privacy" id="privacyLink">Privacy Policy</a> | <a href="#about" id="aboutLink">About</a></p>
     </footer>
   </div>
+  
+  <!-- Toast Notifications Container -->
+  <div class="toast-container"></div>
+  
+  <!-- Modal for Privacy Policy -->
+  <div id="privacyModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Privacy Policy</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>NeuroShare respects your privacy and is committed to protecting your personal data. This Privacy Policy will inform you how we handle your personal data when you use our service.</p>
+        <h3>Data Collection</h3>
+        <p>Files you upload are temporarily stored and automatically deleted after 24 hours. We do not analyze or access the content of your files.</p>
+        <h3>Data Sharing</h3>
+        <p>We do not share your data with third parties. Files are only accessible to those with the direct link.</p>
+        <h3>Security</h3>
+        <p>All file transfers are encrypted using industry-standard protocols.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal for About -->
+  <div id="aboutModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>About NeuroShare</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>NeuroShare is a secure file sharing application designed for quick and easy transfer of files between devices.</p>
+        <h3>Features</h3>
+        <ul>
+          <li>Secure end-to-end encrypted file transfers</li>
+          <li>No account required</li>
+          <li>Files automatically expire after 24 hours</li>
+          <li>Progressive Web App - works offline and can be installed</li>
+        </ul>
+        <h3>Version</h3>
+        <p>NeuroShare v1.2.0</p>
+      </div>
+    </div>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
   <script>
