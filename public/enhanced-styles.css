@@ -1,0 +1,440 @@
+/* Enhanced Media Queries */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .overlay {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  section {
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+  
+  header p {
+    font-size: 1rem;
+  }
+  
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Improved Layout for Larger Screens */
+@media (min-width: 992px) {
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+      "upload download"
+      "console console";
+    gap: 1.5rem;
+  }
+  
+  .upload-section {
+    grid-area: upload;
+  }
+  
+  .download-section {
+    grid-area: download;
+  }
+  
+  .log-section {
+    grid-area: console;
+  }
+}
+
+/* Enhanced File Input */
+.custom-file-input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.custom-file-input input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.custom-file-label {
+  display: block;
+  background: rgba(0, 122, 255, 0.1);
+  border: 2px dashed #007aff;
+  border-radius: 5px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: #007aff;
+  transition: all 0.3s ease;
+}
+
+.custom-file-label:hover {
+  background: rgba(0, 122, 255, 0.2);
+}
+
+.custom-file-label span {
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Hover Effects for Buttons and List Items */
+.btn {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+#fileList li {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+#fileList li:before {
+  content: "📄";
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+#fileList li:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Improved Console */
+.console {
+  background: #f8f9fa;
+  border: 1px solid #e2e8f0;
+  color: #333;
+  font-family: "Courier New", monospace;
+  line-height: 1.5;
+  height: 200px;
+  transition: height 0.3s ease;
+}
+
+.console p {
+  margin: 0;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.console p:last-child {
+  border-bottom: none;
+}
+
+/* Enhanced Progress Bar */
+.progress-container {
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 15px 0;
+  background: #e2e8f0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #007aff, #00c6ff);
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+/* CSS Variables for Consistent Theming */
+:root {
+  --primary-color: #007aff;
+  --primary-light: rgba(0, 122, 255, 0.1);
+  --primary-hover: #005bb5;
+  --text-dark: #333;
+  --text-light: #555;
+  --bg-light: #ffffff;
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+/* Refined Background */
+body {
+  background: linear-gradient(135deg, #4a90e2, #007aff, #0055b3);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Glass Morphism Effect */
+.overlay {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+section {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+section:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #3b99ff;
+    --primary-light: rgba(59, 153, 255, 0.2);
+    --primary-hover: #69b1ff;
+    --text-dark: #e0e0e0;
+    --text-light: #b0b0b0;
+    --bg-light: #1a1a1a;
+  }
+  
+  body {
+    background: linear-gradient(135deg, #1a1a2e, #203a43, #0f2027);
+    color: var(--text-dark);
+  }
+  
+  .overlay {
+    background: rgba(26, 26, 26, 0.85);
+    border: 1px solid rgba(50, 50, 50, 0.2);
+  }
+  
+  section {
+    background: rgba(30, 30, 30, 0.7);
+    border: 1px solid rgba(50, 50, 50, 0.1);
+  }
+  
+  header h1 {
+    color: var(--primary-color);
+  }
+  
+  section h2 {
+    color: var(--primary-color);
+  }
+  
+  .console {
+    background: #242424;
+    color: #e0e0e0;
+    border: 1px solid #333;
+  }
+  
+  #fileList li {
+    background: rgba(59, 153, 255, 0.2);
+  }
+  
+  #fileList li:hover {
+    background: rgba(59, 153, 255, 0.3);
+  }
+}
+
+/* Subtle Animations */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+header h1 {
+  position: relative;
+  display: inline-block;
+}
+
+header h1:after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--primary-color);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+header h1:hover:after {
+  transform: scaleX(1);
+}
+
+/* Content-visibility for better performance */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
+/* Better lazy-load appearance */
+@keyframes skeletonPulse {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: skeletonPulse 1.5s infinite;
+  border-radius: var(--border-radius);
+}
+
+/* Optimized animations with will-change */
+.btn, #fileList li {
+  will-change: transform;
+}
+
+/* Page load animations */
+.page-entering {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-entered {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Responsive font sizing with clamp */
+header h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+}
+
+header p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+}
+
+/* Optimized box shadows */
+.overlay, section, .btn {
+  /* More performant than regular box-shadow */
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .overlay {
+    box-shadow: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .btn, .console, #refreshBtn, #uploadForm button {
+    display: none;
+  }
+  
+  section {
+    page-break-inside: avoid;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Focus states for keyboard navigation */
+:focus {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.btn:focus, input:focus {
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.5);
+}
+
+/* Skip to content link for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-color);
+  color: white;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Increased contrast ratios */
+.btn {
+  background: #0062cc; /* Darker blue for better contrast */
+  color: white;
+  font-weight: 600;
+}
+
+/* Reduced motion option */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animated {
+    animation: none !important;
+  }
+}
+
+/* Better text readability */
+body {
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+p, label, button, input {
+  font-size: 1rem;
+}
+
+/* Make sure interactive elements have proper sizing */
+.btn, input[type="file"], #fileList li {
+  min-height: 44px; /* Minimum touch target size */
+}
+
+#fileList li {
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+/* Aria-labels styled appropriately */
+[aria-hidden="true"] {
+  display: none;
+}
+
+[aria-busy="true"] {
+  cursor: progress;
+}
